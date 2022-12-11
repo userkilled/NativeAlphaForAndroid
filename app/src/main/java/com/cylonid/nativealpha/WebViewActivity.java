@@ -71,6 +71,8 @@ import com.cylonid.nativealpha.util.WebViewLauncher;
 import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.processphoenix.ProcessPhoenix;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -235,8 +237,22 @@ public class WebViewActivity extends AppCompatActivity implements EasyPermission
                 startActivity(i);
             } else {
                 if(dl_url != null && !dl_url.equals("")) {
-                  DownloadManager.Request request = new DownloadManager.Request(
-                          Uri.parse(dl_url));
+                    if(dl_url.startsWith("blob:")) {
+                        dl_url = dl_url.replace("blob:", "");
+                        try {
+                            dl_url = URLDecoder.decode(dl_url, "UTF-8");
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    DownloadManager.Request request = null;
+                    try {
+                        request = new DownloadManager.Request(
+                                Uri.parse(dl_url));
+                    }
+                    catch(Exception e) {
+                        Utility.showInfoSnackbar(this, getString(R.string.file_download), Snackbar.LENGTH_SHORT);
+                    }
                   String file_name = Utility.getFileNameFromDownload(dl_url, contentDisposition, mimeType);
 
                   request.setMimeType(mimeType);

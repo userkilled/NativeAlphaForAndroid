@@ -88,6 +88,7 @@
     <string name="permission_location_rationale">Si desea que las aplicaciones web puedan recuperar su ubicación, puede conceder a Native Alpha el permiso para acceder a la ubicación. Puedes decidir conceder el permiso para cada Aplicación Web individualmente.</string>
     <string name="permission_storage_rationale">Si quieres que las Aplicaciones Web de Native Alpha sean capaces de descargar archivos, tienes que aceptar la solicitud de permiso de almacenamiento.</string>
     <string name="file_download">El archivo se está descargando...</string>
+    <string name="file_download_failed">Descarga fallida.</string>
     <string name="custom_icon">Seleccione un icono personalizado</string>
     <string name="show_progress_bar_during_page_load">Mostrar la barra de progreso durante la carga de la página</string>
     <string name="user_agent">Agente de usuario</string>
