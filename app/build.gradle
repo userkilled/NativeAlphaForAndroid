@@ -5,18 +5,18 @@ apply plugin: 'com.mikepenz.aboutlibraries.plugin'
 
 //https://gist.github.com/shakalaca/6422811
 android {
-    // applicationVariants.all { variant ->
-    //     variant.assembleProvider.get().doLast {
-    //         delete fileTree('src/main/java/com/cylonid/nativealpha') {
-    //             include '**/__WebViewActivity_*.java'
-    //         }
-    //         delete fileTree('src/main') {
-    //             include '**/AndroidManifest.xml'
-    //         }
-    //         ant.move(file: 'src/main/AndroidManifest_original.xml', tofile:'src/main/AndroidManifest.xml')
+     applicationVariants.all { variant ->
+         variant.assembleProvider.get().doLast {
+             delete fileTree('src/main/java/com/cylonid/nativealpha') {
+                 include '**/__WebViewActivity_*.java'
+             }
+             delete fileTree('src/main') {
+                 include '**/AndroidManifest.xml'
+             }
+             ant.move(file: 'src/main/AndroidManifest_original.xml', tofile:'src/main/AndroidManifest.xml')
 
-    //     }
-    // }
+         }
+     }
 
     compileSdk 35
     splits {
@@ -140,56 +140,60 @@ dependencies {
 
 
 }
+def renameManifest = tasks.register("renameManifest") {
+    ant.move(file: 'src/main/AndroidManifest.xml', tofile:'src/main/AndroidManifest_original.xml')
+}
+preBuild.dependsOn renameManifest
 
-// int NUM_OF_CONTAINERS = 8
-// String placeholder = "<!--Placeholder-->"
+int NUM_OF_CONTAINERS = 8
 
-// 0.upto(NUM_OF_CONTAINERS-1) { int i ->
-//     def trTask = tasks.register( "createWebViewclass${i}", Copy ) {
-//         from 'src/main/java/com/cylonid/nativealpha/WebViewActivity.java'
-//         into 'src/main/java/com/cylonid/nativealpha'
-//         filter {
-//             String line -> line.replaceAll("WebViewActivity", "__WebViewActivity_${i}")
-//         }
-//         rename { String fileName ->
-//             fileName.replace("WebViewActivity.java", "__WebViewActivity_${i}.java")
-//         }
-//     }
-//     preBuild.dependsOn trTask
-// }
+def generateWebViewActivities = tasks.register( "extendAndroidManifest", Copy ) {
+    dependsOn(renameManifest)
+    from 'src/main/AndroidManifest_original.xml'
+    into 'src/main'
 
-// def renameManifest = tasks.register("renameManifest") {
-//     ant.move(file: 'src/main/AndroidManifest.xml', tofile:'src/main/AndroidManifest_original.xml')
-// }
-// preBuild.dependsOn renameManifest
-
-
-// def generateWebViewActivities = tasks.register( "extendAndroidManifest", Copy ) {
-//     from 'src/main/AndroidManifest_original.xml'
-//     into 'src/main'
-
-//     String replacement = ""
-//     for (int i = 0; i < NUM_OF_CONTAINERS; i++) {
-//         replacement += "        <activity\n" +
-//                 "            android:name=\".__WebViewActivity_" + String.valueOf(i) + "\"\n" +
-//                 "            android:label=\"@string/app_name_unicode\"\n" +
-//                 "            android:parentActivityName=\".MainActivity\"\n" +
-//                 "            android:icon=\"@mipmap/native_alpha\"\n" +
-//                 "            android:roundIcon=\"@mipmap/native_alpha\"\n" +
-//                 "            android:theme=\"@style/AppTheme.NoActionBar.Webapp\"\n" +
-//                 "            android:configChanges=\"orientation|screenSize|smallestScreenSize|density|screenLayout|uiMode|keyboard|keyboardHidden|navigation\"\n" +
-//                 "            android:launchMode=\"standard\"\n" +
-//                 "            android:process=\":web_sandbox_" + String.valueOf(i) + "\"\n" +
-//                 "            android:documentLaunchMode=\"intoExisting\"\n" +
-//                 "         />\n"
-//     }
+    String placeholder = "<!--Placeholder-->"
+    String replacement = ""
+    for (int i = 0; i < NUM_OF_CONTAINERS; i++) {
+        replacement += "        <activity\n" +
+                "            android:name=\".__WebViewActivity_" + String.valueOf(i) + "\"\n" +
+                "            android:label=\"@string/app_name_unicode\"\n" +
+                "            android:parentActivityName=\".MainActivity\"\n" +
+                "            android:icon=\"@mipmap/native_alpha\"\n" +
+                "            android:roundIcon=\"@mipmap/native_alpha\"\n" +
+                "            android:theme=\"@style/AppTheme.NoActionBar.Webapp\"\n" +
+                "            android:configChanges=\"orientation|screenSize|smallestScreenSize|density|screenLayout|uiMode|keyboard|keyboardHidden|navigation\"\n" +
+                "            android:launchMode=\"standard\"\n" +
+                "            android:process=\":web_sandbox_" + String.valueOf(i) + "\"\n" +
+                "            android:documentLaunchMode=\"intoExisting\"\n" +
+                "         />\n"
+    }
 
 
-//     filter {
-//         String line -> line.replaceAll(placeholder, replacement)
-//     }
-//     rename { String fileName ->
-//         fileName.replace("_original", "")
-//     }
-// }
-// preBuild.dependsOn generateWebViewActivities
+    filter {
+        String line -> line.replaceAll(placeholder, replacement)
+    }
+    rename { String fileName ->
+        fileName.replace("_original", "")
+    }
+}
+preBuild.dependsOn generateWebViewActivities
+
+(0..<NUM_OF_CONTAINERS).each { int i ->
+    TaskProvider<Copy> trTask = tasks.register("createWebViewclass${i}", Copy) {
+        from 'src/main/java/com/cylonid/nativealpha/WebViewActivity.java'
+        into "src/main/java/com/cylonid/nativealpha/__WebViewActivity_${i}"
+        dependsOn(generateWebViewActivities)
+        mustRunAfter(i == 0 ? [] : tasks.getByName("createWebViewclass${i-1}"))
+
+        filter { String line ->
+            line.replaceAll("WebViewActivity", "__WebViewActivity_${i}")
+        }
+
+        rename { String fileName ->
+            fileName.replace("WebViewActivity.java", "__WebViewActivity_${i}.java")
+        }
+    }
+
+    preBuild.dependsOn(trTask)
+}
