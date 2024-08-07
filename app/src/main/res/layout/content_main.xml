@@ -13,12 +13,11 @@
 
         tools:ignore="MissingConstraints">
 
-        <LinearLayout
-            android:id="@+id/mainScreen"
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragment_container_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-        >
-        </LinearLayout>
+            android:name="com.cylonid.nativealpha.fragments.webapplist.WebAppListFragment" />
+
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

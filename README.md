@@ -95,6 +95,7 @@ A: You can build the app yourself, everything is open-source including the paid 
 * [Android About Page](https://github.com/medyo/android-about-page)
 * [Android Databinding](https://developer.android.com/topic/libraries/data-binding)
 * [AboutLibraries](https://github.com/mikepenz/AboutLibraries)
+* [Drag & Drop n' Swipe Recyclerview](https://github.com/ernestoyaquello/DragDropSwipeRecyclerview)
 
 For testing purposes:
 * [Robolectric](https://github.com/robolectric/robolectric)
