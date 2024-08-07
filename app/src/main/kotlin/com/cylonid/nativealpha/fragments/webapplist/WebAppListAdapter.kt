@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.view.View
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
@@ -27,6 +28,7 @@ class WebAppListAdapter(dataSet: List<WebApp> = emptyList(), private val activit
         val openButton : ImageButton = itemView.findViewById(R.id.btnOpenWebview)
         val settingsButton : ImageButton = itemView.findViewById(R.id.btnSettings)
         val deleteButton : ImageButton = itemView.findViewById(R.id.btnDelete)
+        val dragAnchor : ImageView = itemView.findViewById(R.id.dragAnchor)
     }
 
     override fun getViewHolder(itemView: View) = ViewHolder(itemView)
@@ -88,6 +90,6 @@ class WebAppListAdapter(dataSet: List<WebApp> = emptyList(), private val activit
 
     }
 
-    override fun getViewToTouchToStartDraggingItem(item: WebApp, viewHolder: ViewHolder, position: Int) = viewHolder.titleView
+    override fun getViewToTouchToStartDraggingItem(item: WebApp, viewHolder: ViewHolder, position: Int) = viewHolder.dragAnchor
 
 }

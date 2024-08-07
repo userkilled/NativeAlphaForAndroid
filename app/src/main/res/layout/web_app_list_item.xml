@@ -6,6 +6,14 @@
     android:layout_height="@dimen/line_height"
     android:orientation="horizontal">
 
+    <ImageView
+        android:id="@+id/dragAnchor"
+        android:layout_weight="0.5"
+        android:layout_width="wrap_content"
+        android:background="@color/transparent"
+        android:layout_height="match_parent"
+        android:src="@drawable/baseline_drag_indicator_24"/>
+
     <Button
         android:id="@+id/btn_title"
         android:layout_width="0dp"
