@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -220,10 +221,12 @@ public class DataManager {
 
     public ArrayList<WebApp> getActiveWebsites() {
         ArrayList<WebApp> active_webapps = new ArrayList<>();
+
         for (WebApp webapp : websites) {
             if (webapp.isActiveEntry())
                 active_webapps.add(webapp);
         }
+        active_webapps.sort(Comparator.comparingInt(WebApp::getOrder));
         return active_webapps;
     }
 
