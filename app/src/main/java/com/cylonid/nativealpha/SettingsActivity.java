@@ -3,6 +3,9 @@ package com.cylonid.nativealpha;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.webkit.CookieManager;
+import android.webkit.WebStorage;
+import android.webkit.WebView;
 import android.widget.Button;
 
 import androidx.annotation.Nullable;
@@ -48,6 +51,10 @@ public class SettingsActivity extends AppCompatActivity {
                 Utility.showInfoSnackbar(this, getString(R.string.import_failed), Snackbar.LENGTH_LONG);
             } else {
                 Intent i = new Intent(SettingsActivity.this, MainActivity.class);
+
+                WebStorage.getInstance().deleteAllData();
+                CookieManager.getInstance().removeAllCookies(null);
+                
                 DataManager.getInstance().loadAppData();
                 i.putExtra(Const.INTENT_BACKUP_RESTORED, true);
                 finish();
