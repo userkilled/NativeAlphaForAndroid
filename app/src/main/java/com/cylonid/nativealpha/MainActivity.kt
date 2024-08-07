@@ -166,15 +166,15 @@ class MainActivity : AppCompatActivity() {
                     if (!(str_url.startsWith("https://")) && !(str_url.startsWith("http://"))) {
                         str_url = "https://$str_url"
                     }
-                    val new_site = WebApp(str_url, DataManager.getInstance().incrementedID)
-                    new_site.applySettingsForNewWebApp()
-                    DataManager.getInstance().addWebsite(new_site)
+                    val newSite = WebApp(str_url, DataManager.getInstance().incrementedID, DataManager.getInstance().incrementedOrder)
+                    newSite.applySettingsForNewWebApp()
+                    DataManager.getInstance().addWebsite(newSite)
 
                     webAppListFragment!!.updateWebAppList()
                     dialog.dismiss()
                     if (create_shortcut.isChecked) {
-                        val frag = ShortcutDialogFragment.newInstance(new_site)
-                        frag.show(supportFragmentManager, "SCFetcher-" + new_site.ID)
+                        val frag = ShortcutDialogFragment.newInstance(newSite)
+                        frag.show(supportFragmentManager, "SCFetcher-" + newSite.ID)
                     }
                 }
             }

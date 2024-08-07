@@ -53,10 +53,19 @@ class WebApp {
     var isAllowMediaPlaybackInBackground = false
     var order = 0
 
+    constructor(url: String, id: Int, order: Int) {
+        title = url.replace("http://", "").replace("https://", "").replace("www.", "")
+        baseUrl = url
+        this.ID = id
+        this.order = order
+        initDefaultSettings()
+    }
+
     constructor(url: String, id: Int) {
         title = url.replace("http://", "").replace("https://", "").replace("www.", "")
         baseUrl = url
         this.ID = id
+        this.order = 0
         initDefaultSettings()
     }
 

@@ -214,6 +214,11 @@ public class DataManager {
     public int getIncrementedID() {
         return getWebsites().size();
     }
+
+    public int getIncrementedOrder() {
+        return getActiveWebsitesCount() + 1;
+    }
+
     public ArrayList<WebApp> getWebsites() {
         Utility.Assert(websites != null, "Websites not loaded");
         return websites;
