@@ -1,7 +1,9 @@
 package com.cylonid.nativealpha;
 
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.test.espresso.Espresso;
 import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.web.webdriver.Locator;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
@@ -14,6 +16,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.sql.Time;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -25,6 +30,7 @@ import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -57,39 +63,46 @@ public class UITests {
         onView(withId(R.id.switchCreateShortcut)).perform(click());
         onView(withId(android.R.id.button1)).perform(click());
         assertEquals(DataManager.getInstance().getWebApp(0).getBaseUrl(), "https://github.com");
-        onView(allOf(withTagValue(is("btnOpenWebview0")), isDisplayed())).perform(click());
+        onView(allOf(withId(R.id.btnOpenWebview), isDisplayed())).perform(click());
+    }
+
+    @Test
+    public void addMultipleWebsiteAndTestLoadedUrl() {
+        initMultipleWebsites(List.of("github.com", "orf.at"));
+        onView(TestUtils.getElementFromMatchAtPosition(withId(R.id.btnOpenWebview), 1)).perform(click());
+        onWebView(Matchers.allOf(withId(R.id.webview))).withNoTimeout().check(webMatches(getCurrentUrl(), containsString("orf.at")));
     }
 
     @Test
     public void startWebView() {
-        initSingleWebsite("https://twitter.com");
-        onView(allOf(withTagValue(is("btnOpenWebview0")), isDisplayed())).perform(click());
+        initSingleWebsite("https://github.com");
+        onView(allOf(withId(R.id.btnOpenWebview))).perform(click());
         onView(withId(R.id.webview)).check(matches(isDisplayed()));
     }
 
     @Test(expected = NoMatchingViewException.class)
     public void deleteWebsite() {
-        initSingleWebsite("https://twitter.com");
-        onView(allOf(withTagValue(is("btnDelete0")))).perform(click());
+        initSingleWebsite("https://github.com");
+        onView(allOf(withId(R.id.btnDelete))).perform(click());
         TestUtils.alertDialogAccept();
 
-        onView(allOf(withTagValue(is("btnDelete0")))).check(matches(not(isDisplayed()))); //Throws exception
+        onView(allOf(withId(R.id.btnDelete))).check(matches(not(isDisplayed()))); //Throws exception
     }
 
     @Test
     public void changeWebAppSettings() {
         initSingleWebsite("https://whatismybrowser.com/detect/are-cookies-enabled");
-        onView(allOf(withTagValue(is("btnSettings0")))).perform(click());
+        onView(withId(R.id.btnSettings)).perform(click());
         onView(withId(R.id.switchCookies)).perform(scrollTo()).perform(click());
         onView(withId(R.id.btnSave)).perform(click());
-        onView(allOf(withTagValue(is("btnOpenWebview0")), isDisplayed())).perform(click());
+        onView(allOf(withId(R.id.btnOpenWebview), isDisplayed())).perform(click());
         onWebView(Matchers.allOf(withId(R.id.webview))).withNoTimeout().withElement(findElement(Locator.ID, "detected_value")).check(webMatches(getText(), containsString("No")));
 
     }
     @Test
     public void badSSLAccept() {
         initSingleWebsite("https://untrusted-root.badssl.com/");
-        onView(allOf(withTagValue(is("btnOpenWebview0")), isDisplayed())).perform(click());
+        onView(allOf(withId(R.id.btnOpenWebview), isDisplayed())).perform(click());
         TestUtils.waitForElementWithText(R.string.load_anyway);
         onView(withText(R.string.load_anyway)).perform(click());
         onWebView(Matchers.allOf(withId(R.id.webview))).withNoTimeout().withElement(findElement(Locator.ID, "content")).check(webMatches(getText(), containsString("untrusted-root")));
@@ -98,7 +111,7 @@ public class UITests {
     @Test(expected = java.lang.RuntimeException.class)
     public void badSSLDismiss() {
         initSingleWebsite("https://untrusted-root.badssl.com/");
-        onView(allOf(withTagValue(is("btnOpenWebview0")), isDisplayed())).perform(click());
+        onView(allOf(withId(R.id.btnOpenWebview), isDisplayed())).perform(click());
         TestUtils.waitForElementWithText(android.R.string.cancel);
         onView(withText(android.R.string.cancel)).perform(click());
         onWebView(Matchers.allOf(withId(R.id.webview))).withTimeout(3, TimeUnit.SECONDS).withElement(findElement(Locator.ID, "content")).check(webMatches(getText(), containsString("untrusted-root")));
@@ -107,48 +120,26 @@ public class UITests {
 
     @Test
     public void openHTTPSite() {
-        initSingleWebsite("http://annozone.de");
-        onView(allOf(withTagValue(is("btnOpenWebview0")), isDisplayed())).perform(click());
+        initSingleWebsite("http://httpforever.com/");
+        onView(allOf(withId(R.id.btnOpenWebview), isDisplayed())).perform(click());
         TestUtils.waitForElementWithText(android.R.string.cancel);
         onView(withId(android.R.id.button2)).perform(scrollTo()).perform(click());
-//        onView(isRoot()).perform(ViewActions.pressBack());
 
-        onView(allOf(withTagValue(is("btnOpenWebview0")), isDisplayed())).perform(click());
+        // for whatever reason, test framework clicks the wrong button here...
+        onView(allOf(withId(R.id.btnOpenWebview), isDisplayed())).perform(click());
+        onView(isRoot()).perform(ViewActions.pressBack());
+
+        onView(allOf(withId(R.id.btnOpenWebview), isDisplayed())).perform(click());
         TestUtils.waitForElementWithText(android.R.string.cancel);
         onView(withId(android.R.id.button1)).perform(scrollTo()).perform(click());
-        onWebView(Matchers.allOf(withId(R.id.webview))).withTimeout(6, TimeUnit.SECONDS).check(webMatches(getCurrentUrl(), containsString("annozone")));
+        onWebView(Matchers.allOf(withId(R.id.webview))).withTimeout(6, TimeUnit.SECONDS).check(webMatches(getCurrentUrl(), containsString("httpforever.com")));
     }
-
-
-//    @Test
-//    public void changeUIModes() {
-//        String[] ui_modes = activityTestRule.getActivity().getResources().getStringArray(R.array.ui_modes);
-//        TestUtils.alertDialogDismiss();
-//
-//        //Open settings, set to dark mode and cancel
-//        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-//        onView(withText(R.string.action_settings)).perform(click());
-//        onView(withId(R.id.dropDownTheme)).perform(click());
-//        onView(withText(ui_modes[2])).perform(click());
-//        assertEquals(AppCompatDelegate.getDefaultNightMode(), AppCompatDelegate.MODE_NIGHT_YES);
-//        onView(withId(R.id.btnCancel)).perform(click());
-//
-//        //Check that default mode is restored, change to light mode and check light mode
-//        assertEquals(AppCompatDelegate.getDefaultNightMode(), AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-//        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-//        onView(withText(R.string.action_settings)).perform(click());
-//        onView(withId(R.id.dropDownTheme)).perform(click());
-//        onView(withText(ui_modes[1])).perform(click());
-//        onView(withId(R.id.btnSave)).perform(click());
-//        assertEquals(AppCompatDelegate.getDefaultNightMode(), AppCompatDelegate.MODE_NIGHT_NO);
-//
-//    }
 
 
     private void initSingleWebsite(final String base_url) {
         activityTestRule.getActivity().runOnUiThread(() -> {
             DataManager.getInstance().addWebsite(new WebApp(base_url, DataManager.getInstance().getIncrementedID()));
-            activityTestRule.getActivity().addActiveWebAppsToUI();
+            activityTestRule.getActivity().updateWebAppList();
         });
 
         TestUtils.acceptLicense();
@@ -161,8 +152,9 @@ public class UITests {
             for (String base_url : urls) {
                 DataManager.getInstance().addWebsite(new WebApp(base_url, DataManager.getInstance().getIncrementedID()));
             }
-            activityTestRule.getActivity().addActiveWebAppsToUI();
+            activityTestRule.getActivity().updateWebAppList();
         });
+        TestUtils.acceptLicense();
         //Get rid of welcome message
         TestUtils.alertDialogDismiss();
     }

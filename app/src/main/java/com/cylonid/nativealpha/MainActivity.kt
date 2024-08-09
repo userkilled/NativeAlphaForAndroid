@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Switch
 import androidx.annotation.StringRes
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -45,16 +46,21 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         if (intent.getBooleanExtra(Const.INTENT_BACKUP_RESTORED, false)) {
-            webAppListFragment!!.updateWebAppList()
+            updateWebAppList()
 
             buildImportSuccessDialog()
             intent.putExtra(Const.INTENT_BACKUP_RESTORED, false)
             intent.putExtra(Const.INTENT_REFRESH_NEW_THEME, false)
         }
         if (intent.getBooleanExtra(Const.INTENT_WEBAPP_CHANGED, false)) {
-            webAppListFragment!!.updateWebAppList()
+            updateWebAppList()
             intent.putExtra(Const.INTENT_WEBAPP_CHANGED, false)
         }
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun updateWebAppList() {
+        webAppListFragment!!.updateWebAppList()
     }
 
     private fun personalizeToolbar() {
@@ -170,7 +176,7 @@ class MainActivity : AppCompatActivity() {
                     newSite.applySettingsForNewWebApp()
                     DataManager.getInstance().addWebsite(newSite)
 
-                    webAppListFragment!!.updateWebAppList()
+                    updateWebAppList()
                     dialog.dismiss()
                     if (create_shortcut.isChecked) {
                         val frag = ShortcutDialogFragment.newInstance(newSite)
