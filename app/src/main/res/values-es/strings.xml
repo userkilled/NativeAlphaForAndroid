@@ -164,6 +164,7 @@
     <string name="webview_activity_launch_failed">La Aplicación Web no pudo ser iniciada.</string>
     <string name="no_url_entered">Por favor, introduzca una URL.</string>
     <string name="scroll_to_bottom">Por favor, desplácese hasta el final.</string>
-
-
+    <string name="always_show_software_buttons">Mostrar siempre los botones de navegación del software</string>
+    <string name="use_standard_context_menu_temporarily">Utilizar el menú contextual estándar</string>
+    <string name="use_standard_context_menu_permanently">Utilizar permanentemente el menú contextual estándar</string>
 </resources>

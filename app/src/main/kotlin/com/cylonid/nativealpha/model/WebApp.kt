@@ -52,6 +52,7 @@ class WebApp {
     var isBiometricProtection = false
     var isAllowMediaPlaybackInBackground = false
     var order = 0
+    var alwaysUseFallbackContextMenu = false
 
     constructor(url: String, id: Int, order: Int) {
         title = url.replace("http://", "").replace("https://", "").replace("www.", "")
@@ -115,6 +116,7 @@ class WebApp {
         isBiometricProtection = other.isBiometricProtection
         isAllowMediaPlaybackInBackground = other.isAllowMediaPlaybackInBackground
         order = other.order
+        alwaysUseFallbackContextMenu = other.alwaysUseFallbackContextMenu
     }
 
     private fun initDefaultSettings() {

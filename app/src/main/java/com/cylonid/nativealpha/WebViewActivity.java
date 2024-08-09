@@ -180,7 +180,7 @@ public class WebViewActivity extends AppCompatActivity implements EasyPermission
 
         if (webapp.isShowFullscreen()) {
             this.hideSystemBars();
-        } else {
+        } else if(DataManager.getInstance().getSettings().getAlwaysShowSoftwareButtons()) {
             this.showSystemBars();
         }
         wv.setWebViewClient(new CustomBrowser());
@@ -221,6 +221,7 @@ public class WebViewActivity extends AppCompatActivity implements EasyPermission
         loadURL(wv, url);
         wv.setWebChromeClient(new CustomWebChromeClient());
         wv.setOnLongClickListener(view -> {
+            if(webapp.getAlwaysUseFallbackContextMenu()) return false;
             if(fallbackToDefaultLongClickBehaviour) {
                 fallbackToDefaultLongClickBehaviour = false;
                 return false;
@@ -417,7 +418,7 @@ public class WebViewActivity extends AppCompatActivity implements EasyPermission
                 case R.id.cmItemCloseWebApp:
                     finishAndRemoveTask();
                     return true;
-                case R.id.cmSelectText:
+                case R.id.cmFallbackContextmenuTemp:
                     fallbackToDefaultLongClickBehaviour = true;
                     return true;
                 case R.id.cmMainMenu:

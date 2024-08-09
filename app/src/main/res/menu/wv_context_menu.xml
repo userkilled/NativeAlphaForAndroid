@@ -36,9 +36,9 @@
                 <item android:title="@string/copy_url"
                     android:id="@+id/cmItemCopyUrl"
                     android:icon="@drawable/ic_baseline_content_copy_24"/>
-                <item android:title="@string/select_text"
-                    android:id="@+id/cmSelectText"
-                    android:icon="@drawable/ic_baseline_format_quote_24"/>
+                <item android:title="@string/use_standard_context_menu_temporarily"
+                    android:id="@+id/cmFallbackContextmenuTemp"
+                    android:icon="@drawable/baseline_menu_open_24"/>
                 <item
                     android:id="@+id/cmItemCloseWebApp"
                     android:icon="@drawable/ic_baseline_exit_to_app_24"

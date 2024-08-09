@@ -139,6 +139,14 @@
                             android:checked="@={settings.showProgressbar}"
                             android:text="@string/show_progress_bar_during_page_load" />
 
+                        <Switch
+                            android:id="@+id/switchAlwaysShowSoftwareButtons"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:checked="@={settings.alwaysShowSoftwareButtons}"
+                            android:text="@string/always_show_software_buttons" />
+
+
                     </LinearLayout>
 
                     <LinearLayout

@@ -159,4 +159,7 @@
     <string name="no_url_entered">Bitte geben Sie eine URL an.</string>
     <string name="scroll_to_bottom">Bitte scrollen Sie bis zum Ende.</string>
     <string name="file_download_failed">Download fehlgeschlagen.</string>
+    <string name="always_show_software_buttons">Software-Navigationsbuttons immer anzeigen</string>
+    <string name="use_standard_context_menu_temporarily">Einmalig Standard-Kontextmenü nutzen</string>
+    <string name="use_standard_context_menu_permanently">Standard-Kontextmenü nutzen</string>
 </resources>

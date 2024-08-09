@@ -513,6 +513,13 @@
                                 android:text="@string/activate_two_finger_zoom" />
 
                             <Switch
+                                android:id="@+id/switchFallbackToStandardContextmenu"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:checked="@={webapp.alwaysUseFallbackContextMenu}"
+                                android:text="@string/use_standard_context_menu_permanently" />
+
+                            <Switch
                                 android:id="@+id/switchMediaplaybackBackground"
                                 android:visibility="gone"
                                 android:layout_width="match_parent"
