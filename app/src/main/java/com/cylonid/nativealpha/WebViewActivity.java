@@ -51,6 +51,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ShareCompat;
 import androidx.core.content.ContextCompat;
@@ -353,30 +354,50 @@ public class WebViewActivity extends AppCompatActivity implements EasyPermission
         });
     }
 
+    @SuppressLint("RequiresFeature")
     private void setDarkModeIfNeeded() {
+        if (Utility.isNightMode(this)) {
+            wv.setBackgroundColor(Color.BLACK);
+        } else {
+            wv.setBackgroundColor(Color.WHITE);
+        }
+
         boolean needsForcedDarkMode = webapp.isUseTimespanDarkMode() &&
                 Utility.isInInterval(Utility.convertStringToCalendar(webapp.getTimespanDarkModeBegin()), Calendar.getInstance(), Utility.convertStringToCalendar(webapp.getTimespanDarkModeEnd()))
                 || (!webapp.isUseTimespanDarkMode() && webapp.isForceDarkMode());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            if (Utility.isNightMode(this) || needsForcedDarkMode) {
-                wv.getSettings().setForceDark(WebSettings.FORCE_DARK_ON);
-            } else {
-                wv.getSettings().setForceDark(WebSettings.FORCE_DARK_OFF);
-            }
+            boolean isForceDarkSupported = WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK);
+            boolean isForceDarkStrategySupported = WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK_STRATEGY);
+            boolean isAlgorithmicDarkeningSupported = WebViewFeature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING);
 
             if (needsForcedDarkMode) {
-                if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK_STRATEGY)) {
+                wv.setForceDarkAllowed(true);
+                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                if (isForceDarkSupported) {
+                    WebSettingsCompat.setForceDark(wv.getSettings(), WebSettingsCompat.FORCE_DARK_ON);
+                }
+                if (isForceDarkStrategySupported) {
                     WebSettingsCompat.setForceDarkStrategy(wv.getSettings(), WebSettingsCompat.DARK_STRATEGY_PREFER_WEB_THEME_OVER_USER_AGENT_DARKENING);
                 }
-                wv.setBackgroundColor(Color.BLACK);
+                if (isAlgorithmicDarkeningSupported) {
+                    WebSettingsCompat.setAlgorithmicDarkeningAllowed(wv.getSettings(), true);
+                }
             } else {
-                if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK_STRATEGY)) {
+                getDelegate().setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+
+                if (isForceDarkSupported) {
+                    WebSettingsCompat.setForceDark(wv.getSettings(), WebSettingsCompat.FORCE_DARK_OFF);
+                }
+                if (isForceDarkStrategySupported) {
                     WebSettingsCompat.setForceDarkStrategy(wv.getSettings(), WebSettingsCompat.DARK_STRATEGY_WEB_THEME_DARKENING_ONLY);
                 }
-                wv.setBackgroundColor(Color.WHITE);
+                if (isAlgorithmicDarkeningSupported) {
+                    WebSettingsCompat.setAlgorithmicDarkeningAllowed(wv.getSettings(), false);
+                }
             }
         }
+
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -489,6 +510,7 @@ public class WebViewActivity extends AppCompatActivity implements EasyPermission
     @Override
     protected void onPause() {
         super.onPause();
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
 
         wv.evaluateJavascript("document.querySelectorAll('audio').forEach(x => x.pause());", null);
         wv.onPause();
