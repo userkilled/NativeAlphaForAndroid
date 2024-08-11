@@ -91,12 +91,12 @@ public class UITests {
 
     @Test
     public void changeWebAppSettings() {
-        initSingleWebsite("https://whatismybrowser.com/detect/are-cookies-enabled");
+        initSingleWebsite("https://whatismybrowser.com/detect/are-third-party-cookies-enabled");
         onView(withId(R.id.btnSettings)).perform(click());
-        onView(withId(R.id.switchCookies)).perform(scrollTo()).perform(click());
+        onView(withId(R.id.switch3PCookies)).perform(scrollTo()).perform(click());
         onView(withId(R.id.btnSave)).perform(click());
         onView(allOf(withId(R.id.btnOpenWebview), isDisplayed())).perform(click());
-        onWebView(Matchers.allOf(withId(R.id.webview))).withNoTimeout().withElement(findElement(Locator.ID, "detected_value")).check(webMatches(getText(), containsString("No")));
+        onWebView(Matchers.allOf(withId(R.id.webview))).withNoTimeout().withElement(findElement(Locator.ID, "detected_value")).check(webMatches(getText(), containsString("Yes")));
 
     }
     @Test
@@ -124,10 +124,6 @@ public class UITests {
         onView(allOf(withId(R.id.btnOpenWebview), isDisplayed())).perform(click());
         TestUtils.waitForElementWithText(android.R.string.cancel);
         onView(withId(android.R.id.button2)).perform(scrollTo()).perform(click());
-
-        // for whatever reason, test framework clicks the wrong button here...
-        onView(allOf(withId(R.id.btnOpenWebview), isDisplayed())).perform(click());
-        onView(isRoot()).perform(ViewActions.pressBack());
 
         onView(allOf(withId(R.id.btnOpenWebview), isDisplayed())).perform(click());
         TestUtils.waitForElementWithText(android.R.string.cancel);
