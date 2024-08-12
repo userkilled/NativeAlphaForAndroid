@@ -171,8 +171,6 @@ public class ShortcutDialogFragment extends DialogFragment  {
         String host_part = base_url.replace("http://", "").replace("https://", "").replace("www.", "");
 
         //No suitable icon
-        if (host_part.startsWith("facebook."))
-            found_icons.put(325, "https://static.xx.fbcdn.net/rsrc.php/v3/y3/r/UrYT8B96uSq.png");
 
         if (host_part.startsWith("amazon."))
             found_icons.put(300, "https://upload.wikimedia.org/wikipedia/commons/d/de/Amazon_icon.png");
