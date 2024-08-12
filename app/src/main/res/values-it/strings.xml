@@ -160,4 +160,7 @@
     <string name="webview_activity_launch_failed">Impossibile avviare la Web App.</string>
     <string name="no_url_entered">Inserire un indirizzo</string>
     <string name="scroll_to_bottom">Scorri fino in fondo.</string>
+    <string name="always_show_software_buttons">Mostra sempre i pulsanti di navigazione del software</string>
+    <string name="use_standard_context_menu_temporarily">Utilizzare temporaneamente il menu contestuale standard</string>
+    <string name="use_standard_context_menu_permanently">Utilizzare il menu contestuale standard</string>
 </resources>
