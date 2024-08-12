@@ -11,6 +11,7 @@ import androidx.test.rule.ActivityTestRule;
 import com.cylonid.nativealpha.model.DataManager;
 import com.cylonid.nativealpha.model.WebApp;
 
+import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,9 +25,11 @@ import java.util.concurrent.TimeUnit;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
+import static androidx.test.espresso.action.ViewActions.actionWithAssertions;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.action.ViewActions.swipeDown;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -40,11 +43,14 @@ import static androidx.test.espresso.web.sugar.Web.onWebView;
 import static androidx.test.espresso.web.webdriver.DriverAtoms.findElement;
 import static androidx.test.espresso.web.webdriver.DriverAtoms.getText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static com.cylonid.nativealpha.TestUtils.dragFromTo;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.Assert.assertEquals;
+
+import android.view.View;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -71,6 +77,18 @@ public class UITests {
         initMultipleWebsites(List.of("github.com", "orf.at"));
         onView(TestUtils.getElementFromMatchAtPosition(withId(R.id.btnOpenWebview), 1)).perform(click());
         onWebView(Matchers.allOf(withId(R.id.webview))).withNoTimeout().check(webMatches(getCurrentUrl(), containsString("orf.at")));
+    }
+
+    @Test
+    public void setCustomOrderOfWebapps() {
+        initMultipleWebsites(List.of("github.com", "orf.at"));
+        onView(TestUtils.getElementFromMatchAtPosition(withId(R.id.dragAnchor), 0)).perform(swipeDown());
+        Matcher<View> anchor = TestUtils.getElementFromMatchAtPosition(withId(R.id.dragAnchor), 0);
+ 
+        onView(anchor)
+                .perform(actionWithAssertions(dragFromTo(500)));
+        assertEquals(DataManager.getInstance().getWebApp(0).getOrder(), 1);
+
     }
 
     @Test

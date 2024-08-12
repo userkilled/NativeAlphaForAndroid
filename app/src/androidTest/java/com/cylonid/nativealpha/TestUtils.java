@@ -11,6 +11,11 @@ import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.action.CoordinatesProvider;
+import androidx.test.espresso.action.GeneralSwipeAction;
+import androidx.test.espresso.action.Press;
+import androidx.test.espresso.action.Swipe;
+import androidx.test.espresso.matcher.ViewMatchers;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -58,6 +63,42 @@ public class TestUtils {
         } catch (InterruptedException e) {
             Assert.fail(e.getMessage());
         }
+    }
+
+    // Custom ViewAction to perform drag
+    public static ViewAction dragFromTo(final int amountInPixels) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return ViewMatchers.isDisplayed(); // Constraints to ensure the view is displayed
+            }
+
+            @Override
+            public String getDescription() {
+                return "Drag from a position given by resource ID and move by the specified amount of pixels";
+            }
+
+            @Override
+            public void perform(androidx.test.espresso.UiController uiController, View view) {
+                // Start position coordinates
+                CoordinatesProvider startCoordinates = v -> {
+                    int[] location = new int[2];
+                    v.getLocationOnScreen(location);
+                    return new float[]{location[0] + v.getWidth() / 2f, location[1] + v.getHeight() / 2f};
+                };
+
+                // End position coordinates (move down by a specified amount of pixels)
+                CoordinatesProvider endCoordinates = v -> {
+                    int[] location = new int[2];
+                    v.getLocationOnScreen(location);
+                    return new float[]{location[0] + v.getWidth() / 2f, location[1] + v.getHeight() / 2f + amountInPixels};
+                };
+
+                // Perform swipe action
+                new GeneralSwipeAction(Swipe.SLOW, startCoordinates, endCoordinates, Press.FINGER)
+                        .perform(uiController, view);
+            }
+        };
     }
 
     public static Matcher<View> getElementFromMatchAtPosition(final Matcher<View> matcher, final int position) {
