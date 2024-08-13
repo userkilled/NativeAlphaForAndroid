@@ -357,6 +357,9 @@ public class WebViewActivity extends AppCompatActivity implements EasyPermission
 
     @SuppressLint("RequiresFeature")
     private void setDarkModeIfNeeded() {
+        if (!BuildConfig.FLAVOR.equals("extended")) {
+            return;
+        }
         if (Utility.isNightMode(this)) {
             wv.setBackgroundColor(Color.BLACK);
         } else {
@@ -385,7 +388,7 @@ public class WebViewActivity extends AppCompatActivity implements EasyPermission
                     WebSettingsCompat.setAlgorithmicDarkeningAllowed(wv.getSettings(), true);
                 }
             } else {
-                getDelegate().setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                getDelegate().setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
                 if (isForceDarkSupported) {
                     WebSettingsCompat.setForceDark(wv.getSettings(), WebSettingsCompat.FORCE_DARK_OFF);
