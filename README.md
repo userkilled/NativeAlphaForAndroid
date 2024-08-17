@@ -2,7 +2,7 @@
 # <img src="graphics/logo.png" width="50px" alt=""></img> Native Alpha
 ![OS](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white&style=plastic)
 ![OS](https://img.shields.io/badge/MinVersion-8.0-red)
-![SDK](https://img.shields.io/badge/SDK-32-yellowgreen)
+![SDK](https://img.shields.io/badge/SDK-35-yellowgreen)
 [![GitHub release](https://img.shields.io/github/v/release/cylonid/NativeAlphaForAndroid?include_prereleases&color=blueviolet)](https://github.com/cylonid/NativeAlphaForAndroid/releases)
 [![Github all releases](https://img.shields.io/github/downloads/cylonid/NativeAlphaForAndroid/total?color=blue&label=GitHub%E2%87%A9&style=plastic)](https://somsubhra.github.io/github-release-stats/?username=cylonid&repository=NativeAlphaForAndroid&page=1&per_page=20)
 [![GitHub license](https://img.shields.io/github/license/cylonid/NativeAlphaForAndroid?color=orange)](https://github.com/cylonid/NativeAlphaForAndroid/blob/master/LICENSE)
@@ -20,7 +20,7 @@
 
 ## Download Options
 [![IzzyOnDroid Download Badge](graphics/IzzyOnDroid.png)](https://apt.izzysoft.de/fdroid/index/apk/com.cylonid.nativealpha)
-[![APK Download Badge](graphics/apk_badge.png)](https://github.com/cylonid/NativeAlphaForAndroid/releases/download/v1.3.1/NativeAlpha-standard-universal-release-v1.3.1.apk)
+[![APK Download Badge](graphics/apk_badge.png)](https://github.com/cylonid/NativeAlphaForAndroid/releases/download/v1.4.0/NativeAlpha-standard-universal-release-v1.4.0.apk)
 [![Google Play Download Badge](graphics/google_play.png)](https://play.google.com/store/apps/details?id=com.cylonid.nativealpha)
 ### Paid Download
 [![Google Play Download Badge](graphics/google_play.png)](https://play.google.com/store/apps/details?id=com.cylonid.nativealpha.pro)
@@ -31,22 +31,13 @@
   * Biometric Access Protection: For every Web App, you can enable access protection (Fingerprint + fallback to lockscreen PIN)
   * Experimental "Force Dark Mode" also available for websites (configurable with respect to day-time)
   
-## Latest Changes (v1.3.0)
+## Latest Changes (v1.4.0)
 
-* Resolved unusual going back behaviour on certain websites
-* Added support for Google OAuth-enabled sites
-* Context Menu: Long-press context menu with several options (Share, going back/forward, reload...)
-* Added pinch-to-zoom setting
-* Added option to freely set start URL of Web Apps to support non-standard URLs (expert settings)
-* Build for x86 and x86_64 platform included
-* Several bugfixes and general improvements
-
-### Minor changes (v1.3.1)
-* Fixed a crash upon adding new Web Apps in certain situations
-* Fixed global Web App settings being disabled in certain situations
-* Other minor fixes
-* Spanish translation added (thanks to https://github.com/cyanwolfg)
-
+* Order of Web Apps in menu can be changed
+* File downloads are supported
+* Native Alpha custom context menu can be deactived so that the standard browser context menu is shown
+* Italian translation added
+* General, technical version updates
 
 ### Native Alpha Plus
 
