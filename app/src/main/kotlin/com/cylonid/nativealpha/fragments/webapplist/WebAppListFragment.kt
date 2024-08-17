@@ -10,8 +10,6 @@ import com.cylonid.nativealpha.model.DataManager
 import com.cylonid.nativealpha.model.WebApp
 import com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeRecyclerView
 import com.ernestoyaquello.dragdropswiperecyclerview.listener.OnItemDragListener
-import timber.log.Timber
-import java.util.logging.Logger
 
 class WebAppListFragment : Fragment(R.layout.fragment_web_app_list) {
     private lateinit var adapter: WebAppListAdapter
@@ -28,6 +26,8 @@ class WebAppListFragment : Fragment(R.layout.fragment_web_app_list) {
         list.adapter = adapter
         list.orientation = DragDropSwipeRecyclerView.ListOrientation.VERTICAL_LIST_WITH_VERTICAL_DRAGGING
         list.dragListener = onItemDragListener
+        list.disableSwipeDirection(DragDropSwipeRecyclerView.ListOrientation.DirectionFlag.RIGHT)
+        list.disableSwipeDirection(DragDropSwipeRecyclerView.ListOrientation.DirectionFlag.LEFT)
     }
 
     public fun updateWebAppList() {
